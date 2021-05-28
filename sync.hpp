@@ -3,6 +3,13 @@
 #include <map>
 #include <vector>
 #include <cstdlib>
+#include <algorithm>
+
+#ifdef WIN32
+#define screen_clear "clr"
+#else
+#define screen_clear "clear"
+#endif
 
 class SyncControl
 {
@@ -35,8 +42,8 @@ class AutoSync : public SyncControl
 {
 public:
 
-	AutoSync() {};
-	~AutoSync() {};
+    AutoSync() = default;
+    ~AutoSync() = default;
 
 	void makeVector() override;
 	void makeMap() override;
@@ -46,8 +53,8 @@ class IOSync : public SyncControl
 {
 public:
 
-	IOSync() {};
-	~IOSync() {};
+    IOSync() = default;
+    ~IOSync() = default;
 
 	void makeVector() override;
 	void makeMap() override;
@@ -57,7 +64,7 @@ class Factory
 {
 public:
 
-	Factory() {};
+    Factory() = default;
 	virtual ~Factory() = default;
 
 	virtual SyncControl* make(SyncControl* mode) = 0;

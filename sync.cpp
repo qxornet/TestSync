@@ -7,8 +7,8 @@
 void
 SyncControl::remove()
 {
-	std::cout << "Remove bad allocation... ";
-	int removeCount = 1 + rand() % (size - 1);
+    std::cout << "Removing bad allocation... ";
+    int removeCount = 1 + rand() % (15 - 1);
 	for (int i = 0; i < removeCount; i++)
 	{
 		this->vdata.erase(std::remove(this->vdata.begin(), this->vdata.end(), 1 + rand() % size), this->vdata.end());
@@ -16,7 +16,7 @@ SyncControl::remove()
 		if (item != this->mdata.end())
 			this->mdata.erase(item);
 	}
-	std::cout << removeCount << " items has removed" << std::endl;
+    std::cout << "\x1b[36m" << this->size - this->vdata.size() << "\x1b[0m items has removed" << std::endl;
 }
 
 void SyncControl::sync()
@@ -25,45 +25,45 @@ void SyncControl::sync()
 	std::map<int, int> bufferMap;
 	std::vector<int> bufferVec;
 
-	int currentPosition = 1;
+    int mapItem = 0;
 	for (auto& vecItem : this->vdata)
 	{
 		for (auto& [keyMap, keyItem] : this->mdata)
 		{
 			if (vecItem != keyItem) continue;
-			bufferMap[keyMap] = keyItem;
-			this->mdata.erase(keyMap);
-			
-			bufferVec.push_back(vecItem);
-			this->vdata.erase(std::remove(this->vdata.begin(), this->vdata.end(), currentPosition), this->vdata.end());
+            bufferMap[keyMap] = keyItem;
+            mapItem = keyItem;
+            this->mdata.erase(this->mdata[keyMap]);
 		}
-		currentPosition++;
+
+        if (vecItem != mapItem) continue;
+        bufferVec.push_back(vecItem);
 	}
 
-	int incorCount = this->vdata.size();
+    int incorCount = this->vdata.size() - bufferVec.size();
 	this->vdata = bufferVec;
 	this->mdata = bufferMap;
 
-	std::cout << "Finished. " << incorCount << " incorrect items found" << std::endl;
+    std::cout << "Finished. \x1b[36m" << incorCount << "\x1b[0m incorrect items found" << std::endl;
 }
 
 void
 SyncControl::print()
 {
-	std::cout << "Vector" << " Lenght: " << this->vdata.size() << std::endl;
+    std::cout << "Vector" << " Lenght: \x1b[36m" << this->vdata.size() << "\x1b[0m" << std::endl;
 
 	for (auto item : this->vdata)
 	{
-		std::cout << "Value: " << item << std::endl;
+        std::cout << "Value: \x1b[36m" << item << "\x1b[0m" << std::endl;
 	}
 
 	std::cout << std::endl;
 
-	std::cout << "Map" << " Lenght: " << this->mdata.size() << std::endl;
+    std::cout << "Map" << " Lenght: \x1b[36m" << this->mdata.size() << "\x1b[0m" << std::endl;
 
 	for (auto [key, item] : this->mdata)
 	{
-		std::cout << " Key: " << key << " Value: " << item << std::endl;
+        std::cout << " Key: \x1b[36m" << key << "\x1b[0m" << " Value: \x1b[36m" << item << "\x1b[0m" << std::endl;
 	}
 	std::cout << std::endl;
 }
@@ -71,13 +71,13 @@ SyncControl::print()
 void
 SyncControl::compute()
 {
-	this->size = 5 + rand() % (15 - 5);
-	std::cout << "Generated " << size << " values..." << std::endl;
+    this->size = 15 + rand() % (25 - 15);
+    std::cout << "Generated \x1b[36m" << size << "\x1b[0m values..." << std::endl;
 
 	this->makeVector();
 	this->makeMap();
 
-	this->remove();
+    this->remove();
 	this->sync();
 	this->print();
 }
@@ -123,7 +123,7 @@ AutoSync::makeMap()
 void
 IOSync::makeVector()
 {
-	system("cls");
+    system(screen_clear);
 	std::cout << "Please enter to buffer " << this->size << " values by vector container" << std::endl;
 
 	for (int i = 0; i < this->size; i++)
@@ -137,7 +137,7 @@ IOSync::makeVector()
 void
 IOSync::makeMap()
 {
-	system("cls");
+    system(screen_clear);
 	std::cout << "Please enter to buffer " << this->size << " values by map container" << std::endl;
 
 	for (int i = 0; i < this->size; i++)
